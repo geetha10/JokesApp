@@ -1,2 +1,2 @@
 include ':jokeViewer'
-include ':app', ':backend',':jokeslib'
+include ':app', ':backend',':jokesource'

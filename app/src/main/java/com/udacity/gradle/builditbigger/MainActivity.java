@@ -4,15 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.geetha.jokeslib.Jokes;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.geetha.jokeviewer.JokeViewer;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -56,11 +55,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
-        //Toast.makeText(this, Jokes.getJoke (), Toast.LENGTH_SHORT).show();
-       // Intent intent=new Intent (this, JokeViewer.class);
-        new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
-      //  intent.putExtra (JokeViewer.JOKE_EXTRA_STRING,Jokes.getJoke ());
-      //  startActivity (intent);
+        AsyncTask <Pair <Context, String>, Void, String> task =
+                new EndpointsAsyncTask ().execute (new Pair <Context, String> (this, "Manfred"));
     }
 
 
