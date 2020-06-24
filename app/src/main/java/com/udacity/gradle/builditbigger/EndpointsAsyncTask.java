@@ -1,6 +1,8 @@
 package com.udacity.gradle.builditbigger;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.widget.ProgressBar;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -10,7 +12,7 @@ import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
 
 import java.io.IOException;
 
-class EndpointsAsyncTask extends AsyncTask <Void, Void, String> {
+class EndpointsAsyncTask extends AsyncTask <Void, Boolean, String> {
     private static MyApi myApiService = null;
     private JokeFetchedListener listener;
     public EndpointsAsyncTask(JokeFetchedListener listener) {
@@ -18,13 +20,16 @@ class EndpointsAsyncTask extends AsyncTask <Void, Void, String> {
     }
 
     @Override
+    protected void onPreExecute() {
+        super.onPreExecute ();
+        listener.updateProgressBar (true);
+    }
+
+    @Override
     protected String doInBackground(Void... voids) {
-        if (myApiService == null) {  // Only do this once
+        if (myApiService == null) {
             MyApi.Builder builder = new MyApi.Builder (AndroidHttp.newCompatibleTransport (),
                     new AndroidJsonFactory (), null)
-                    // options for running against local devappserver
-                    // - 10.0.2.2 is localhost's IP address in Android emulator
-                    // - turn off compression when running against local devappserver
                     .setRootUrl ("http://10.0.2.2:8080/_ah/api/")
                     .setGoogleClientRequestInitializer (new GoogleClientRequestInitializer () {
                         @Override
@@ -32,12 +37,8 @@ class EndpointsAsyncTask extends AsyncTask <Void, Void, String> {
                             abstractGoogleClientRequest.setDisableGZipContent (true);
                         }
                     });
-            // end options for devappserver
-
             myApiService = builder.build ();
         }
-
-       // String name = params[0];
 
         try {
             return myApiService.sayHi ("name").execute ().getData ();
@@ -45,11 +46,9 @@ class EndpointsAsyncTask extends AsyncTask <Void, Void, String> {
             return e.getMessage ();
         }
     }
-
-
-
     @Override
     protected void onPostExecute(String result) {
+        listener.updateProgressBar (false);
         listener.onJokeFetched (result);
     }
 }

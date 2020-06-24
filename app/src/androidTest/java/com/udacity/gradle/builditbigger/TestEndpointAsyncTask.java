@@ -22,6 +22,11 @@ public class TestEndpointAsyncTask {
                 result=joke;
                 countDowLatch.countDown ();
             }
+
+            @Override
+            public void updateProgressBar(boolean show) {
+
+            }
         }).execute ();
 
         try {
